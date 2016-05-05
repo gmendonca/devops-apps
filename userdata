@@ -1,0 +1,8 @@
+#!/bin/bash
+
+yum update -y
+yum install docker git -y
+git clone https://github.com/gmendonca/devops-apps.git
+cd devops-apps/python_app/
+docker build -t python-app .
+docker run -p 80:5000 python-app
