@@ -1,0 +1,8 @@
+#!/bin/bash
+yum update -y
+yum install docker git -y
+git clone https://github.com/gmendonca/devops-apps.git
+cd devops-apps/php_app/
+sudo service docker start
+sudo docker build -t php-app .
+sudo docker run -p 80:80 php-app
