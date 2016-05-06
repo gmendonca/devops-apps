@@ -18,7 +18,7 @@ Default region name [None]: sa-east-1
 Default output format [None]: json
 ```
 
-* Later you need to edit two informations on the [create_env.sh]() script. In the header of the file like shown below,
+* Later you need to edit two informations on the [create_env.sh](https://github.com/gmendonca/devops-apps/blob/master/create_env.sh) script. In the header of the file like shown below,
 change the VPC, Subnet(s) and a key-pair name to match your needs.
 
 ```bash
