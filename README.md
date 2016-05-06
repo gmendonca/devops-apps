@@ -4,7 +4,7 @@ Automation script for create a Load Balanced Auto Scaling environment for Docker
 
 ## Configurations
 
-Dependecies: [Python](https://www.python.org/)<br />
+* Dependecies: [Python](https://www.python.org/)<br />
 
 * First you need to configure the environment in order to run the scripts. You can check how to install Amazon AWS CLI [here](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html) and configure.<br />
 
@@ -35,7 +35,7 @@ KEY_PAIR="my-key-pair"
 
 ## Running
 
-* With all the configuration done, just run the script and wait for the environment finish setting up.
+With all the configuration done, just run the script and wait for the environment finish setting up.
 
 ```bash
 $ chmod +x create_env.sh
