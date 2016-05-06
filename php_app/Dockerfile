@@ -4,6 +4,8 @@ RUN apt-get update -y
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y curl libapache2-mod-php5 php5 php5-mcrypt
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 RUN sed -i "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf
 RUN a2enmod rewrite
 
