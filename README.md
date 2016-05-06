@@ -1,5 +1,7 @@
 # DevOps Application
 
+Automation script for create a Load Balanced Auto Scaling environment for Dockerized PHP and Python webapps.
+
 # Configurations
 
 Dependecies: [Python](https://www.python.org/)<br />
@@ -17,7 +19,7 @@ Default output format [None]: json
 ```
 
 Later you need to edit two informations on the [create_env.sh]() script. In the header of the file like shown below,
-change the VPC and Subnet to match your needs.
+change the VPC, Subnet(s) and a key-pair name to match your needs.
 
 ```bash
 #######################################################
@@ -25,6 +27,7 @@ change the VPC and Subnet to match your needs.
 #
 VPC="vpc-6example"
 SUBNETS="subnet-4example"
+KEY_PAIR="my-key-pair"
 #
 #
 #######################################################
