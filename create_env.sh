@@ -4,8 +4,8 @@
 #######################################################
 # Edit this part to match your needs
 #
-VPC="vpc-ca2c3caf"
-SUBNETS="subnet-ecd07188"
+VPC="vpc-4example"
+SUBNETS="subnet-4example"
 KEY_PAIR="my-key-pair"
 #
 #

@@ -5,4 +5,4 @@ git clone https://github.com/gmendonca/devops-apps.git
 cd devops-apps/php_app/
 sudo service docker start
 sudo docker build -t php-app .
-sudo docker run -e PYTHON_APP_ADDRESS='http://lb-py-app-1527107988.sa-east-1.elb.amazonaws.com' -p 80:80 php-app
+sudo docker run -e PYTHON_APP_ADDRESS='http://myapp' -p 80:80 php-app
