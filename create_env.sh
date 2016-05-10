@@ -4,8 +4,8 @@
 #######################################################
 # Edit this part to match your needs
 #
-VPC="vpc-6a62da0f"
-SUBNETS="subnet-4801cb2d"
+VPC="vpc-ca2c3caf"
+SUBNETS="subnet-ecd07188"
 KEY_PAIR="my-key-pair"
 #
 #
@@ -20,7 +20,7 @@ else
 fi
 
 
-CHECK_SG=`aws ec2 describe-security-groups --filter Name=group-name,Values=php-py-app-sg --query "length(*[0])"`
+CHECK_SG=`aws ec2 describe-security-groups --filter Name=group-name,Values=php-py-app-sg Name=vpc-id,Values=$VPC --query "length(*[0])"`
 
 if [[ $CHECK_SG -eq 0 ]];
 then
@@ -33,34 +33,34 @@ else
 fi
 
 # Getting the secuirty GroupId for further use
-SECURITY=`aws ec2 describe-security-groups --group-names "php-py-app-sg" \
+SECURITY=`aws ec2 describe-security-groups --filters Name=group-name,Values=php-py-app-sg Name=vpc-id,Values=$VPC \
 | python -c "import json,sys;print json.load(sys.stdin)['SecurityGroups'][0]['GroupId']"`
 
 
 # Authorizing HTTP and SSH for the created Security Group
-SSH_SG=`aws ec2 describe-security-groups --group-names "php-py-app-sg" \
---filters Name=ip-permission.from-port,Values=22 Name=ip-permission.to-port,\
+SSH_SG=`aws ec2 describe-security-groups --filters Name=group-name,Values=php-py-app-sg Name=vpc-id,Values=$VPC \
+Name=ip-permission.from-port,Values=22 Name=ip-permission.to-port,\
 Values=22 Name=ip-permission.cidr,Values='0.0.0.0/0' --query 'length(*[0])'`
 
 if [[ $SSH_SG -eq 0 ]];
 then
     # Creating security Group in the specified VPC
     echo "Creating Inbound rule for SSH..."
-    aws ec2 authorize-security-group-ingress --group-name php-py-app-sg \
+    aws ec2 authorize-security-group-ingress --group-id $SECURITY \
     --protocol tcp --port 22 --cidr 0.0.0.0/0
 else
     echo "Inbound rule for SSH already exists."
 fi
 
-HTTP_SG=`aws ec2 describe-security-groups --group-names "php-py-app-sg" \
---filters Name=ip-permission.from-port,Values=80 Name=ip-permission.to-port,\
+HTTP_SG=`aws ec2 describe-security-groups --filters Name=group-name,Values=php-py-app-sg Name=vpc-id,Values=$VPC \
+Name=ip-permission.from-port,Values=80 Name=ip-permission.to-port,\
 Values=80 Name=ip-permission.cidr,Values='0.0.0.0/0' --query 'length(*[0])'`
 
 if [[ $HTTP_SG -eq 0 ]];
 then
     # Creating security Group in the specified VPC
     echo "Creating Inbound rule for HTTP..."
-    aws ec2 authorize-security-group-ingress --group-name php-py-app-sg \
+    aws ec2 authorize-security-group-ingress --group-id $SECURITY \
     --protocol tcp --port 80 --cidr 0.0.0.0/0
 else
     echo "Inbound rule for HTTP already exists."
@@ -89,7 +89,7 @@ then
     echo "Creating Launch Configuration Group for the Python App..."
     aws autoscaling create-launch-configuration --launch-configuration-name lc-py-app \
     --image-id ami-fb890097 --instance-type t2.micro --security-groups $SECURITY \
-    --key-name $KEY_PAIR --user-data file://userdata-py
+    --associate-public-ip-address --key-name $KEY_PAIR --user-data file://userdata-py
 else
     echo "Launch Configuration for Python App already exists."
 fi
@@ -101,7 +101,7 @@ then
     # Creating security Group in the specified VPC
     echo "Creating Auto Scaling Group for the Python App..."
     aws autoscaling create-auto-scaling-group --auto-scaling-group-name asg-py-app \
-    --launch-configuration-name lc-py-app --availability-zones "sa-east-1a" \
+    --launch-configuration-name lc-py-app --availability-zones "sa-east-1a" --vpc-zone-identifier $SUBNETS \
     --load-balancer-names "lb-py-app" --max-size 2 --min-size 1 --desired-capacity 1
 else
     echo "Auto Scaling Group for Python App already exists."
@@ -161,7 +161,7 @@ then
     echo "Creating Launch Configuration Group for the PHP App..."
     aws autoscaling create-launch-configuration --launch-configuration-name lc-php-app \
     --image-id ami-fb890097 --instance-type t2.micro --security-groups $SECURITY \
-    --key-name $KEY_PAIR --user-data file://userdata-php
+    --associate-public-ip-address --key-name $KEY_PAIR --user-data file://userdata-php
 else
     echo "Launch Configuration for PHP App already exists."
 fi
@@ -174,7 +174,7 @@ then
     # Creating security Group in the specified VPC
     echo "Creating Auto Scaling Group for the PHP App..."
     aws autoscaling create-auto-scaling-group --auto-scaling-group-name asg-php-app \
-    --launch-configuration-name lc-php-app --availability-zones "sa-east-1a" \
+    --launch-configuration-name lc-php-app --availability-zones "sa-east-1a" --vpc-zone-identifier $SUBNETS\
     --load-balancer-names "lb-php-app" --max-size 2 --min-size 1 --desired-capacity 1
 else
     echo "Auto Scaling Group for PHP App already exists."
