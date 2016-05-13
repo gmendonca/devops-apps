@@ -8,8 +8,8 @@ Automation script for create a Load Balanced Auto Scaling environment for Docker
 
 * First you need to configure the environment in order to run the scripts. You can check how to install Amazon AWS CLI [here](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html) and configure.<br />
 
-* When configuring, it's necessary to create an user with permissions to create all the environment and </br?>
-then provide its AWS Access Key and Secret Access, set the default region name and the output format to json:
+* When configuring, it's necessary to create an user with permissions to create all the environment and </br >
+then provide its AWS Access Key and Secret Access, set the default region name(must match the VPC's and Subnets' region) and the output format to json:
 
 ```bash
 $ aws configure
@@ -33,7 +33,7 @@ change the VPC, Subnet(s) and a key-pair name to match your needs accordingly to
 #######################################################
 # Edit this part to match your needs
 #
-VPC="vpc-6example"
+VPC="vpc-4example"
 SUBNETS="subnet-4example"
 KEY_PAIR="my-key-pair"
 #
